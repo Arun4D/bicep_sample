@@ -13,6 +13,8 @@ bicep build ./main.bicep --stdout
 bicep build ./main.bicep --stdout
 
 az deployment sub create  --location westus --name dev-deploy01 --template-file ./main.bicep
+
+az stack sub create  --location westus --name dev-deploy01 --template-file ./main.bicep --deny-settings-mode None
 ````
 
 2. Delete Resource 

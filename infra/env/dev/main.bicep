@@ -59,6 +59,7 @@ module nsgModule '../../../modules/nsg/nsg.bicep' = [
   }
 ]
 
+@batchSize(1)
 @description('subnet creation')
 module subnetModule '../../../modules/subnet/subnet.bicep' = [
   for rg in items(configFinal.subnet): {
@@ -77,6 +78,7 @@ module subnetModule '../../../modules/subnet/subnet.bicep' = [
 var jumpBoxSubnetName = first(filter(items(configFinal.subnet), snet => snet.key == 'jump-box'))!.key
 
 
+@batchSize(1)
 @description('vm creation')
 module vmModule '../../../modules/vm_win/vm_win.bicep' = [
   for rg in items(configFinal.virtual_machine): {
@@ -93,7 +95,7 @@ module vmModule '../../../modules/vm_win/vm_win.bicep' = [
      }
     scope: resourceGroup(networkRgName)
 
-    dependsOn: [resourceGroupModule, vnet]
+    dependsOn: [subnetModule]
   }
 ]
 

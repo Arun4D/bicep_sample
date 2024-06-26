@@ -6,6 +6,7 @@ param vnetName string
 
 resource vnet 'Microsoft.Network/virtualNetworks@2023-02-01' existing = {
   name: vnetName
+  scope: resourceGroup()
 }
 
 // subnet Resource
@@ -14,6 +15,7 @@ resource subnet 'Microsoft.Network/virtualNetworks/subnets@2023-02-01' = {
   parent: vnet
   properties: {
     addressPrefixes: addressPrefixes
+    
   }
 }
 

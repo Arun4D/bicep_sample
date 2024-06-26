@@ -87,6 +87,7 @@ resource nic 'Microsoft.Network/networkInterfaces@2022-05-01' = [
       ]
     }
   }
+
 ]
 
 resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = [
@@ -122,7 +123,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = [
         dataDisks: [
           for (disk, index) in vmConfig.data_disk_size: {
             diskSizeGB: first(filter(items(globalConfigMap.disk_size), l_disk => l_disk.key == disk)).?value
-            lun: 10 + index
+            lun: index
             createOption: 'Empty'
           }
         ]
@@ -130,7 +131,7 @@ resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = [
       networkProfile: {
         networkInterfaces: [
           {
-            id: nic[vmName].id
+            id: nic[index].id
           }
         ]
       }
