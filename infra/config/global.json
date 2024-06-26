@@ -49,6 +49,12 @@
         "offer": "WindowsServer",
         "sku": "2019-Datacenter",
         "version": "latest"
+      },
+      "Windows22": {
+        "publisher": "MicrosoftWindowsServer",
+        "offer": "WindowsServer",
+        "sku": "2022-datacenter-g2",
+        "version": "latest"
       }
     },
     "data_disk_types": {

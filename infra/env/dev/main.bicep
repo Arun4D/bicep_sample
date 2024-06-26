@@ -27,6 +27,8 @@ output resourceGroupOutput array = [
 ]
 
 var networkRgName = first(filter(items(configFinal.resource_group), rg => rg.key == 'nw')).?value
+//var jmpRgName = first(filter(items(configFinal.resource_group), rg => rg.key == 'jmp')).?value
+
 
 @description('Virtual network creation')
 module vnet '../../../modules/vnet/vnet.bicep' = {
@@ -65,6 +67,29 @@ module subnetModule '../../../modules/subnet/subnet.bicep' = [
       subnetName: rg.key
       addressPrefixes:rg.value
       vnetName: configFinal.vnet.name
+     }
+    scope: resourceGroup(networkRgName)
+
+    dependsOn: [resourceGroupModule, vnet]
+  }
+]
+
+var jumpBoxSubnetName = first(filter(items(configFinal.subnet), snet => snet.key == 'jump-box'))!.key
+
+
+@description('vm creation')
+module vmModule '../../../modules/vm_win/vm_win.bicep' = [
+  for rg in items(configFinal.virtual_machine): {
+    name: '${rg.key}-vm-create'
+     params: {
+      vmConfig: rg.value
+      globalConfigMap : globalConfigMap.global_map
+      adminUsername: 'adadmin'
+      adminPassword: 'P@$$w0rd1234!'
+      publicIPAllocationMethod: 'Static'
+      publicIpSku: 'Standard'
+      virtualNetworkName: configFinal.vnet.name
+      subnetName: jumpBoxSubnetName
      }
     scope: resourceGroup(networkRgName)
 

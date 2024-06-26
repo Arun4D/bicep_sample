@@ -7,8 +7,8 @@ param ip_address array = vmConfig.ip_address
 param vm_size [string] = vmConfig.vm_size
 param image string = vmConfig.image
 
-param subnetName string = 'Subnet'
-param virtualNetworkName string = 'MyVNET'
+param subnetName string
+param virtualNetworkName string
 
 @description('Username for the Virtual Machine.')
 param adminUsername string
@@ -72,23 +72,24 @@ resource nic 'Microsoft.Network/networkInterfaces@2022-05-01' = [
     location: location
     properties: {
       ipConfigurations: [
-        for (nic, nic_index) in ip_address[index]: {
-          name: '${vmName}-${nic.name}}'
+          for (ipconf, ipconf_index) in  ip_address[index][0].ip_configs: {
+          name:  '${vmName}-${ip_address[index][0].nic_name}-${ipconf.name}'  
           properties: {
-            privateIPAllocationMethod: nic.allocation_type
-            privateIPAddressVersion: nic.ip
-            primary: nic.primary
+            privateIPAllocationMethod: ipconf.allocation_type
+            privateIPAddress: ipconf.ip
+            primary: ipconf.primary
             subnet: {
               id: resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, subnetName)
             }
           }
         }
+      
       ]
     }
   }
 ]
 
-resource vm 'Microsoft.Compute/virtualMachines@2022-03-01' = [
+resource vm 'Microsoft.Compute/virtualMachines@2023-09-01' = [
   for (vmName, index) in instanceArray: {
     name: vmName
     location: location
@@ -103,8 +104,8 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-03-01' = [
       }
       storageProfile: {
         imageReference: {
-          publisher: first(filter(items(globalConfigMap.image), l_image => l_image.key == image)).?value.?publisher
           offer: first(filter(items(globalConfigMap.image), l_image => l_image.key == image)).?value.?offer
+          publisher: first(filter(items(globalConfigMap.image), l_image => l_image.key == image)).?value.?publisher
           sku: first(filter(items(globalConfigMap.image), l_image => l_image.key == image)).?value.?sku
           version: first(filter(items(globalConfigMap.image), l_image => l_image.key == image)).?value.?version
         }
@@ -118,13 +119,13 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-03-01' = [
             )).?value
           }
         }
-        /*       dataDisks: [
-        {
-          diskSizeGB: 1023
-          lun: 0
-          createOption: 'Empty'
-        }
-      ] */
+        dataDisks: [
+          for (disk, index) in vmConfig.data_disk_size: {
+            diskSizeGB: first(filter(items(globalConfigMap.disk_size), l_disk => l_disk.key == disk)).?value
+            lun: 10 + index
+            createOption: 'Empty'
+          }
+        ]
       }
       networkProfile: {
         networkInterfaces: [
@@ -141,7 +142,6 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-03-01' = [
     } */
       securityProfile: ((securityType == 'TrustedLaunch') ? securityProfileJson : null)
     }
-    dependsOn:[nic]
+    dependsOn: [nic]
   }
-  
 ]

@@ -23,11 +23,11 @@
     },
     "virtual_machine" : {
       "jump-box" : {
-          "instance_name"  : ["jump-box1"],
+          "instance_name"  : ["jumpbox1"],
           "instance_count" : 1,
           "has_public_ip"  : false,
           "vm_size"        : ["Standard_B2ms"],
-          "image"          : "Windows19",
+          "image"          : "Windows22",
           "os_type"        : "windows",
           "os_disk_size"   : "E10",
           "data_disk_size" : ["E3"],
@@ -36,7 +36,7 @@
             [
               {
                 "nic_name"   : "nic1",
-                "ip_configs" : [{ "name" : "config", "allocation_type" : "Static", "ip" : "10.210.1.2", "primary" : true }]
+                "ip_configs" : [{ "name" : "config", "allocation_type" : "Static", "ip" : "192.168.1.132", "primary" : true }]
               }
             ]
           ],
