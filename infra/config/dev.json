@@ -1,0 +1,61 @@
+{
+  "config" : {
+    "location" : "westus",
+    "vnet" : {
+      "name"          : "my-ad-net",
+      "address_space" : ["192.168.1.0/24"]
+    },
+  
+    "resource_group" : {
+      "jmp" : "jump-box-rg",
+      "nw"  : "network-rg"
+    },
+    "nsg" : {
+      "gateway"  : "gateway-nsg",
+      "bastion"  : "bastion-nsg",
+      "jump-box" : "jump-box-nsg"
+    },
+  
+    "subnet" : {
+      "gateway"  : ["192.168.1.0/26"],
+      "bastion"  : ["192.168.1.64/26"],
+      "jump-box": ["192.168.1.128/26"]
+    },
+    "virtual_machine" : {
+      "jump-box" : {
+          "instance_name"  : ["jump-box1"],
+          "instance_count" : 1,
+          "has_public_ip"  : false,
+          "vm_size"        : ["Standard_B2ms"],
+          "image"          : "Windows19",
+          "os_type"        : "windows",
+          "os_disk_size"   : "E10",
+          "data_disk_size" : ["E3"],
+          "license_type"   : "Windows_Server",
+          "ip_address" : [
+            [
+              {
+                "nic_name"   : "nic1",
+                "ip_configs" : [{ "name" : "config", "allocation_type" : "Static", "ip" : "10.210.1.2", "primary" : true }]
+              }
+            ]
+          ],
+          "tags" : {
+            "operating_hours"          : "24X7",
+            "operating_hours_override" : "Yes",
+            "tier"                     : "T2",
+            "created_by"               : "AD",
+            "service"                  : "jump_box"
+          }
+        }
+    }
+  },
+  "environment_tags" : {
+    "environment" : "dev",
+    "entity"      : "",
+    "approval"    : "",
+    "cost_center" : "",
+    "owner"       : ""
+  }
+  
+}
