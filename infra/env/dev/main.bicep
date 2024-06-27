@@ -37,6 +37,7 @@ module vnet '../../../modules/vnet/vnet.bicep' = {
     vnetName: configFinal.vnet.name
     vnetLocation: configFinal.location
     addressPrefix: configFinal.vnet.address_space
+    subnet: configFinal.subnet
     tags: envTagsFinal
   }
   scope: resourceGroup(networkRgName)
@@ -53,22 +54,6 @@ module nsgModule '../../../modules/nsg/nsg.bicep' = [
       nsgName: rg.value
       tags: envTagsFinal
     }
-    scope: resourceGroup(networkRgName)
-
-    dependsOn: [resourceGroupModule, vnet]
-  }
-]
-
-@batchSize(1)
-@description('subnet creation')
-module subnetModule '../../../modules/subnet/subnet.bicep' = [
-  for rg in items(configFinal.subnet): {
-    name: '${rg.key}-snet-create'
-     params: {
-      subnetName: rg.key
-      addressPrefixes:rg.value
-      vnetName: configFinal.vnet.name
-     }
     scope: resourceGroup(networkRgName)
 
     dependsOn: [resourceGroupModule, vnet]
@@ -95,7 +80,7 @@ module vmModule '../../../modules/vm_win/vm_win.bicep' = [
      }
     scope: resourceGroup(networkRgName)
 
-    dependsOn: [subnetModule]
+    dependsOn: [vnet]
   }
 ]
 

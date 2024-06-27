@@ -22,3 +22,7 @@ az stack sub create  --location westus --name dev-deploy01 --template-file ./mai
 ````
 az deployment sub delete --name dev-deploy01
 ````
+
+## Reference
+
+[Vm Creation](https://learn.microsoft.com/en-us/azure/virtual-machines/windows/quick-create-bicep?tabs=CLI)
