@@ -19,7 +19,18 @@
     "subnet" : {
       "gateway"  : ["192.168.1.0/26"],
       "bastion"  : ["192.168.1.64/26"],
-      "jump-box": ["192.168.1.128/26"]
+      "jump-box": ["192.168.1.128/26"],
+      "AzureBastionSubnet":["192.168.1.192/26"]
+    },
+    "bastion" : {
+      "name" : "adBastion",
+      "sku_name": "Basic",
+      "privateIPAllocationMethod": "Dynamic"
+    },
+    "publicip" : {
+      "name" : "adPublic",
+      "sku_name": "Standard",
+      "privateIPAllocationMethod": "Static"
     },
     "virtual_machine" : {
       "jump-box" : {
