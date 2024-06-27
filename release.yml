@@ -23,7 +23,7 @@ stages:
         azureSubscription: 'BicepDeploymentConnection'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
-        inlineScript: 'az deployment sub create  --location westus --name dev-deploy01 --template-file infra/env/dev/main.bicep '
+        inlineScript: 'az deployment sub validate  --location westus --name dev-deploy01 --template-file infra/env/dev/main.bicep '
 
     - task: CopyFiles@2
       displayName: Copy Code
