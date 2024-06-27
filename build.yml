@@ -19,7 +19,7 @@ steps:
     azureSubscription: 'BicepDeploymentConnection'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
-    inlineScript: 'az deployment group validate --resource-group Blog --template-file infra/env/dev/main.bicep --parameters Code/main.parameters.json'
+    inlineScript: 'az deployment sub create  --location westus --name dev-deploy01 --template-file infra/env/dev/main.bicep '
 
 - task: CopyFiles@2
   displayName: Copy Code
