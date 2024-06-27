@@ -6,6 +6,7 @@ pool:
 
 steps:
 - task: AzureCLI@2
+  displayName: Install Bicep
   inputs:
     azureSubscription: 'BicepDeploymentConnection'
     scriptType: 'bash'
@@ -13,6 +14,7 @@ steps:
     inlineScript: 'az bicep install'
 
 - task: AzureCLI@2
+  displayName: Validate Dev Bicep
   inputs:
     azureSubscription: 'BicepDeploymentConnection'
     scriptType: 'bash'
@@ -20,11 +22,13 @@ steps:
     inlineScript: 'az deployment group validate --resource-group Blog --template-file infra/env/dev/main.bicep --parameters Code/main.parameters.json'
 
 - task: CopyFiles@2
+  displayName: Copy Code
   inputs:
-    Contents: 'Code/**'
+    Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
 - task: PublishBuildArtifacts@1
+  displayName: Publish Code
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
