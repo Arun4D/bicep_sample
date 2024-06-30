@@ -1,0 +1,10 @@
+{
+  "environment_tags" : {
+    "environment" : "dev",
+    "entity"      : "",
+    "approval"    : "",
+    "cost_center" : "",
+    "owner"       : ""
+  }
+  
+}

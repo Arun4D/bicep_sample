@@ -1,0 +1,13 @@
+parameters:
+- name: env
+  type: string
+  default: dev
+
+variables:
+  - name: azureSubscription
+    ${{ if eq( parameters['env'], 'dev') }}:
+      value: "BicepDeploymentConnection"
+    ${{ if eq( parameters['env'], 'uat' ) }}:
+      value: "BicepDeploymentConnection"
+    ${{ if eq( parameters['env'], 'prod') }}:
+      value: "BicepDeploymentConnection"

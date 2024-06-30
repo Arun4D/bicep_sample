@@ -28,19 +28,19 @@ parameters:
 - name:  location
   type: string
   default: 'westus'
+- name: tags
+  type: object
+  default: {}
+  displayName: 'tags'
 
 variables:
-  - name: azureSubscription
-    ${{ if eq( parameters['env'], 'dev') }}:
-      value: "BicepDeploymentConnection"
-    ${{ if eq( parameters['env'], 'uat' ) }}:
-      value: "BicepDeploymentConnection"
-    ${{ if eq( parameters['env'], 'prod') }}:
-      value: "BicepDeploymentConnection"
+- template: services/pipeline/common/variable.yml
+  parameters:
+  env: ${{ parameters.env }}
 
 stages:
 - ${{ if parameters.includeBuild }}:
-  - template: services/pipeline/config/build.yml
+  - template: services/pipeline/common/build.yml
     parameters:
       env: ${{ parameters.env }}
       azureSubscription: ${{variables.azureSubscription}}

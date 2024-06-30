@@ -6,9 +6,9 @@ parameters:
   azureSubscription: 'BicepDeploymentConnection'
 
 stages:
-- stage: DEV
+- stage: '${{ parameters.env }}-${{ parameters.serviceName }}'
   jobs:
-  - job: Deploy
+  - job: '${{ parameters.env }}-${{ parameters.serviceName }}-Deploy'
     steps:
     - checkout: none
     
