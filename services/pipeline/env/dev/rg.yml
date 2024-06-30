@@ -4,6 +4,8 @@ parameters:
   serviceName: 'rg'
   location: 'westus'
   azureSubscription: 'BicepDeploymentConnection'
+  rgName: ''
+  taskId: ''
 
 stages:
 - stage: '${{ parameters.env }}_${{ parameters.serviceName }}'
@@ -29,4 +31,5 @@ stages:
         inlineScript: |
           az deployment sub create \
            --location ${{ parameters.location }} --name ${{ parameters.env }}-${{ parameters.serviceName }}-deploy01 \
-           --template-file $(System.ArtifactsDirectory)/drop-${{ parameters.env }}-${{ parameters.serviceName }}/services/${{ parameters.serviceName }}/main.bicep
+           --template-file $(System.ArtifactsDirectory)/drop-${{ parameters.env }}-${{ parameters.serviceName }}/services/${{ parameters.serviceName }}/main.bicep \
+           --parameters rgName=${{ parameters.rgName }} location=${{ parameters.location }}  taskId=${{ parameters.taskId }}
