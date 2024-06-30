@@ -35,7 +35,7 @@ variables:
       value: "BicepDeploymentConnection"
     ${{ if eq( parameters['env'], 'uat' ) }}:
       value: "BicepDeploymentConnection"
-    ${{ if notIn( parameters['env'], 'developer', 'prod') }}:
+    ${{ if eq( parameters['env'], 'prod') }}:
       value: "BicepDeploymentConnection"
 
 stages:
