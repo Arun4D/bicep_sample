@@ -24,7 +24,11 @@ stages:
         azureSubscription: '${{ parameters.azureSubscription }}'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
-        inlineScript: 'az deployment sub validate  --location ${{ parameters.location }} --name ${{ parameters.env }}-${{ parameters.serviceName }}-deploy01 --template-file services/${{ parameters.serviceName }}/main.bicep '
+        inlineScript: |
+          az deployment sub validate \
+           --location ${{ parameters.location }} --name ${{ parameters.env }}-${{ parameters.serviceName }}-deploy01 \
+           --template-file $(System.ArtifactsDirectory)/drop-${{ parameters.env }}-${{ parameters.serviceName }}/services/${{ parameters.serviceName }}/main.bicep \
+           --parameters rgName=${{ parameters.rgName }} location=${{ parameters.location }}  taskId=${{ parameters.taskId }}
 
     - task: CopyFiles@2
       displayName: Copy Code
