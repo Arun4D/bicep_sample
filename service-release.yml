@@ -42,7 +42,10 @@ stages:
 - ${{ if parameters.includeBuild }}:
   - template: services/pipeline/config/build.yml
     parameters:
-      buildConfiguration: ${{ parameters.buildConfiguration }}
+      env: ${{ parameters.env }}
+      azureSubscription: ${{variables.azureSubscription}}
+      serviceName: ${{ parameters.serviceName }}
+      location: ${{ parameters.location }}
 
 - ${{ if parameters.includeService }}:
   - template: services/pipeline/env/${{ parameters.env }}/${{ parameters.serviceName }}.yml
