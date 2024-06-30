@@ -30,6 +30,8 @@ variables:
   - template: common/variable.yml
     parameters:
       env: ${{ parameters.env }}
+  - name: serviceName
+    value: rg
 
 stages:
 - ${{ if parameters.includeBuild }}:
@@ -37,14 +39,14 @@ stages:
     parameters:
       env: ${{ parameters.env }}
       azureSubscription: ${{variables.azureSubscription}}
-      serviceName: ${{ parameters.serviceName }}
+      serviceName: ${{ variables.serviceName }}
       location: ${{ parameters.location }}
       rgName: ${{ parameters.rgName }}
       taskId: ${{ parameters.taskId }}
 
-- stage: '${{ parameters.env }}_${{ parameters.serviceName }}'
+- stage: '${{ parameters.env }}_${{ variables.serviceName }}'
   jobs:
-  - job: '${{ parameters.env }}_${{ parameters.serviceName }}_deploy'
+  - job: '${{ parameters.env }}_${{ variables.serviceName }}_deploy'
     steps:
     - checkout: none
     
@@ -53,7 +55,7 @@ stages:
       inputs:
         buildType: 'current'
         downloadType: 'single'
-        artifactName: 'drop-${{ parameters.env }}-${{ parameters.serviceName }}'
+        artifactName: 'drop-${{ parameters.env }}-${{ variables.serviceName }}'
         downloadPath: '$(System.ArtifactsDirectory)'
     
     - task: AzureCLI@2
@@ -64,6 +66,6 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           az deployment sub create \
-           --location ${{ parameters.location }} --name ${{ parameters.env }}-${{ parameters.serviceName }}-deploy01 \
-           --template-file $(System.ArtifactsDirectory)/drop-${{ parameters.env }}-${{ parameters.serviceName }}/services/${{ parameters.serviceName }}/main.bicep \
+           --location ${{ parameters.location }} --name ${{ parameters.env }}-${{ variables.serviceName }}-deploy01 \
+           --template-file $(System.ArtifactsDirectory)/drop-${{ parameters.env }}-${{ variables.serviceName }}/services/${{ variables.serviceName }}/main.bicep \
            --parameters rgName=${{ parameters.rgName }} location=${{ parameters.location }}  taskId=${{ parameters.taskId }}
