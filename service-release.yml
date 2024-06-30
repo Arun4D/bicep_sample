@@ -13,16 +13,30 @@ parameters:
   default: true
 - name: env
   type: string
-  default: 'dev'
+  default: dev
+  values: 
+  - dev
+  - uat
+  - prod
 - name: serviceName
   type: string
-  default: ''
+  default: rg
+  values: 
+  - rg
+  - win_vm
+  - webapp
 - name:  location
   type: string
   default: 'westus'
-- name:  azureSubscription
-  type: string
-  default: 'BicepDeploymentConnection'
+
+variables:
+  - name: azureSubscription
+    ${{ if eq( parameters['env'], 'dev') }}:
+      value: "BicepDeploymentConnection"
+    ${{ if eq( parameters['env'], 'uat' ) }}:
+      value: "BicepDeploymentConnection"
+    ${{ if notIn( parameters['env'], 'developer', 'prod') }}:
+      value: "BicepDeploymentConnection"
 
 stages:
 - ${{ if parameters.includeBuild }}:
@@ -34,6 +48,6 @@ stages:
   - template: services/pipeline/env/${{ parameters.env }}/${{ parameters.serviceName }}.yml
     parameters:
       env: ${{ parameters.env }}
-      azureSubscription: ${{ parameters.azureSubscription }}
+      azureSubscription: ${{variables.azureSubscription}}
       serviceName: ${{ parameters.serviceName }}
       location: ${{ parameters.location }}
