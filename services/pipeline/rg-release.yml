@@ -61,7 +61,7 @@ stages:
     - task: AzureCLI@2
       displayName: 'Deploy Bicep file'
       inputs:
-        azureSubscription: '${{ parameters.azureSubscription }}'
+        azureSubscription: '${{ variables.azureSubscription }}'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
