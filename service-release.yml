@@ -1,0 +1,39 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+parameters:
+- name: includeBuild
+  type: boolean
+  default: true
+- name: includeService
+  type: boolean
+  default: true
+- name: env
+  type: string
+  default: 'dev'
+- name: serviceName
+  type: string
+  default: ''
+- name:  location
+  type: string
+  default: 'westus'
+- name:  azureSubscription
+  type: string
+  default: 'BicepDeploymentConnection'
+
+stages:
+- ${{ if parameters.includeBuild }}:
+  - template: services/pipeline/config/build.yml
+    parameters:
+      buildConfiguration: ${{ parameters.buildConfiguration }}
+
+- ${{ if parameters.includeService }}:
+  - template: services/pipeline/env/${{ parameters.env }}/${{ parameters.serviceName }}.yml
+    parameters:
+      env: ${{ parameters.env }}
+      azureSubscription: ${{ parameters.azureSubscription }}
+      serviceName: ${{ parameters.serviceName }}
+      location: ${{ parameters.location }}
