@@ -27,13 +27,13 @@ parameters:
   displayName: 'Task or Ticket ID'
 
 variables:
-  - template: services/pipeline/common/variable.yml
+  - template: common/variable.yml
     parameters:
       env: ${{ parameters.env }}
 
 stages:
 - ${{ if parameters.includeBuild }}:
-  - template: services/pipeline/common/build.yml
+  - template: common/build.yml
     parameters:
       env: ${{ parameters.env }}
       azureSubscription: ${{variables.azureSubscription}}
