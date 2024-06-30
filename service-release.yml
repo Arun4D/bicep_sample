@@ -34,9 +34,9 @@ parameters:
   displayName: 'tags'
 
 variables:
-- template: services/pipeline/common/variable.yml
-  parameters:
-  env: ${{ parameters.env }}
+  - template: services/pipeline/common/variable.yml
+    parameters:
+      env: ${{ parameters.env }}
 
 stages:
 - ${{ if parameters.includeBuild }}:
