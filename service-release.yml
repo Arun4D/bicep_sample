@@ -49,6 +49,8 @@ stages:
       azureSubscription: ${{variables.azureSubscription}}
       serviceName: ${{ parameters.serviceName }}
       location: ${{ parameters.location }}
+      rgName: ${{ parameters.rgName }}
+      taskId: ${{ parameters.taskId }}
 
 - ${{ if parameters.includeService }}:
   - template: services/pipeline/env/${{ parameters.env }}/${{ parameters.serviceName }}.yml

@@ -4,6 +4,8 @@ parameters:
   serviceName: 'rg'
   location: 'westus'
   azureSubscription: 'BicepDeploymentConnection'
+  rgName: ''
+  taskId: ''
 
 stages:
 - stage: Build
