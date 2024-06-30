@@ -1,13 +1,47 @@
-# File: build-stage.yml
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
 parameters:
-  env: 'dev'
-  serviceName: 'rg'
-  location: 'westus'
-  azureSubscription: 'BicepDeploymentConnection'
-  rgName: ''
-  taskId: ''
+- name: includeBuild
+  type: boolean
+  default: true
+- name: env
+  type: string
+  default: dev
+  values: 
+  - dev
+  - uat
+  - prod
+- name:  location
+  type: string
+  default: 'westus'
+- name: rgName
+  type: string
+  default: ''
+- name: taskId
+  type: string
+  default: ''
+  displayName: 'Task or Ticket ID'
+
+variables:
+  - template: services/pipeline/common/variable.yml
+    parameters:
+      env: ${{ parameters.env }}
 
 stages:
+- ${{ if parameters.includeBuild }}:
+  - template: services/pipeline/common/build.yml
+    parameters:
+      env: ${{ parameters.env }}
+      azureSubscription: ${{variables.azureSubscription}}
+      serviceName: ${{ parameters.serviceName }}
+      location: ${{ parameters.location }}
+      rgName: ${{ parameters.rgName }}
+      taskId: ${{ parameters.taskId }}
+
 - stage: '${{ parameters.env }}_${{ parameters.serviceName }}'
   jobs:
   - job: '${{ parameters.env }}_${{ parameters.serviceName }}_deploy'
